@@ -1,0 +1,5 @@
+controllers:
+    resource:
+        path: ../src/API/Infrastructure/Controller
+        namespace: App\API\Infrastructure\Controller
+    type: attribute

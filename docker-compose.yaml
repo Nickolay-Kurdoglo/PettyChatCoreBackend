@@ -1,0 +1,30 @@
+version: '3'
+
+services:
+  nginx:
+    container_name: nginx
+    image: nginx
+    ports:
+      - 80:80
+    restart: always
+    volumes:
+      - ./docker/nginx:/etc/nginx/conf.d
+      - ./:${PROJECT_DIR}
+
+  php:
+    build:
+      context: ./docker/php
+    restart: always
+    volumes:
+      - ./:${PROJECT_DIR}
+    depends_on:
+      - nginx
+
+  db:
+    container_name: database
+    image: postgres
+    restart: always
+    environment:
+      - POSTGRES_PASSWORD=${DB_PASS}
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_DB=${DB_NAME}
