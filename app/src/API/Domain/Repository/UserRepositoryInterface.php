@@ -2,13 +2,15 @@
 
 namespace App\API\Domain\Repository;
 
-interface UserRepository
+use App\API\Domain\Entity\User;
+
+interface UserRepositoryInterface
 {
     public function findOne();
 
     public function all();
 
-    public function put();
+    public function put(User $entity): User|false;
 
     public function remove();
 }
