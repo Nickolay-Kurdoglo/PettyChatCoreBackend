@@ -16,7 +16,7 @@ class UserService
     ) {
     }
 
-    public function addUser(User $user)
+    public function add(User $user): void
     {
         $token = JWT::encode([
             'username' => $user->getUsername()
@@ -28,5 +28,10 @@ class UserService
         $user->setToken($token);
 
         $this->repository->put($user);
+    }
+
+    public function getByEmail(string $email): ?User
+    {
+        return $this->repository->getByEmail($email);
     }
 }
