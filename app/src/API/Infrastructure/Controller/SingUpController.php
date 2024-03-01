@@ -15,7 +15,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class SingUpController extends AbstractController
 {
-    #[Route(path: '/api/sing-up', methods: 'POST')]
+    #[Route(path: '/api/v1/auth/sing-up', methods: 'POST')]
     public function store(Request $request, ValidatorInterface $validator, UserService $service): Response
     {
         $data = $request->getPayload();
