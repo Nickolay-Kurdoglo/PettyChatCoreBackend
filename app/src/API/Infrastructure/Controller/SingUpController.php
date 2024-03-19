@@ -6,8 +6,10 @@ namespace App\API\Infrastructure\Controller;
 
 use App\API\Domain\Entity\User;
 use App\API\Domain\Services\UserService;
+use Carbon\Carbon;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -15,7 +17,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class SingUpController extends AbstractController
 {
-    #[Route(path: '/api/v1/auth/sing-up', methods: 'POST')]
+    #[Route(path: '/api/v1/auth/sign-up', methods: 'POST')]
     public function store(Request $request, ValidatorInterface $validator, UserService $service): Response
     {
         $data = $request->getPayload();
@@ -34,6 +36,19 @@ class SingUpController extends AbstractController
 
         $service->addUser($user);
 
-        return new JsonResponse(['info' => 'Success']);
+        $cookie = Cookie::create(
+            name: 'refresh_token',
+            value: $user->getRefreshToken(),
+            expire: Carbon::now()->addMonth(),
+            secure: true,
+            sameSite: Cookie::SAMESITE_NONE,
+            partitioned: true
+        );
+
+        $res = new JsonResponse();
+        $res->headers->setCookie($cookie);
+        $res->setData(['token' => $user->getAccessToken()]);
+
+        return $res;
     }
 }

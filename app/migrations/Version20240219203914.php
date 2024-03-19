@@ -26,6 +26,9 @@ final class Version20240219203914 extends AbstractMigration
         $users->addColumn('username', Types::STRING)->setLength(64);
         $users->addColumn('email', Types::STRING)->setLength(80);
         $users->addColumn('password', Types::STRING)->setLength(256);
+        $users->addColumn('access_token', Types::STRING)->setLength(350);
+        $users->addColumn('refresh_token', Types::STRING)->setLength(350);
+        $users->addColumn('created_at', Types::DATETIME_MUTABLE);
 
         $users->setPrimaryKey(['id']);
     }

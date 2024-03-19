@@ -4,11 +4,14 @@ declare(strict_types=1);
 
 namespace App\API\Domain\Entity;
 
-use Doctrine\ORM\Mapping\Column;
-use Doctrine\ORM\Mapping\Entity;
-use Doctrine\ORM\Mapping\GeneratedValue;
+use DateTime;
 use Doctrine\ORM\Mapping\Id;
 use Doctrine\ORM\Mapping\Table;
+use Doctrine\ORM\Mapping\Column;
+use Doctrine\ORM\Mapping\Entity;
+use Doctrine\ORM\Mapping\OneToOne;
+use Doctrine\ORM\Mapping\JoinColumn;
+use Doctrine\ORM\Mapping\GeneratedValue;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -33,8 +36,12 @@ class User
     #[Length(min: 8, max: 72)]
     #[Column('password')]
     private string $password;
-    #[Column('token')]
-    private string $token;
+    #[Column('access_token')]
+    private string $accessToken;
+    #[Column('refresh_token')]
+    private string $refreshToken;
+    #[Column('created_at')]
+    private DateTime $createdAt;
 
     public function getId(): int
     {
@@ -71,13 +78,43 @@ class User
         $this->password = password_hash($password, PASSWORD_DEFAULT);
     }
 
-    public function getToken(): string
+    public function setAccessToken(string $accessToken): void
     {
-        return $this->token;
+        $this->accessToken = $accessToken;
     }
 
-    public function setToken(string $token): void
+    public function getRefreshToken(): string
     {
-        $this->token = $token;
+        return $this->refreshToken;
+    }
+
+    public function getCreatedAt(): DateTime
+    {
+        return $this->createdAt;
+    }
+
+    public function getExpiresAt(): DateTime
+    {
+        return $this->expiresAt;
+    }
+
+    public function setRefreshToken(string $refreshToken): void
+    {
+        $this->refreshToken = $refreshToken;
+    }
+
+    public function setCreatedAt(DateTime $createdAt): void
+    {
+        $this->createdAt = $createdAt;
+    }
+
+    public function setExpiresAt(DateTime $expiresAt): void
+    {
+        $this->expiresAt = $expiresAt;
+    }
+
+    public function getAccessToken(): string
+    {
+        return $this->accessToken;
     }
 }
