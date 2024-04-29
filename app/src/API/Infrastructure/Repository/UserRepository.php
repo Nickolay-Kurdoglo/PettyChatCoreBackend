@@ -34,20 +34,22 @@ class UserRepository implements UserRepositoryInterface
 
         $now = Carbon::now();
         $accessToken = JWT::encode([
-            'sub'   => $entity->getId(),
+            'id'    => $entity->getId(),
+            'sub'   => $entity->getUsername(),
             'email' => $entity->getEmail(),
-            'exp'   => $now->addHour()->getTimestamp(),
             'iat'   => $now->getTimestamp(),
+            'exp'   => (clone $now)->addHour()->getTimestamp(),
         ],
             (string) getenv('JWT_SECRET'),
             'HS256'
         );
 
         $refreshToken = JWT::encode([
-            'sub'   => $entity->getId(),
+            'id'    => $entity->getId(),
+            'sub'   => $entity->getUsername(),
             'email' => $entity->getEmail(),
-            'exp'   => $now->addMonths(2)->getTimestamp(),
             'iat'   => $now->getTimestamp(),
+            'exp'   => (clone $now)->addMonths(2)->getTimestamp(),
         ],
             (string) getenv('JWT_SECRET'),
             'HS256'

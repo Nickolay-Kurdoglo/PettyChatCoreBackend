@@ -21,6 +21,8 @@ services:
       - ./:${PROJECT_DIR}
     depends_on:
       - nginx
+    env_file:
+      - .env
 
   db:
     container_name: database
@@ -36,3 +38,12 @@ services:
     restart: always
     ports:
       - 8080:8080
+
+  centrifugo:
+    image: centrifugo/centrifugo
+    restart: always
+    ports:
+      - 8000:8000
+    volumes:
+     - ./centrifugo:/centrifugo
+     
